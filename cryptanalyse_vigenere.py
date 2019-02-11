@@ -6,6 +6,7 @@
 
 import sys, getopt, string, math
 
+
 # Alphabet français
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -15,55 +16,51 @@ freq_FR = [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 
 # Chiffrement César
 def chiffre_cesar(txt, key):
-    """
-    Documentation à écrire
-    """
-    return txt
+	message_chiffre=""
+	for i in txt:
+		message_chiffre += alphabet[(alphabet.index(i) + key) %26]
+	return message_chiffre
 
 # Déchiffrement César
 def dechiffre_cesar(txt, key):
-    """
-    Documentation à écrire
-    """
-    return txt
+	message_dechiffre=""
+	for i in txt:
+		message_dechiffre += alphabet[(alphabet.index(i) - key) %26]
+	return message_dechiffre
 
 # Chiffrement Vigenere
 def chiffre_vigenere(txt, key):
-    """
-    Documentation à écrire
-    """
-    return txt
+	messageChiffre = ""
+	for i in range(len(txt)):
+		messageChiffre+=alphabet[(alphabet.index(txt[i])+key[i%len(key)])%26]
+	return messageChiffre
 
 # Déchiffrement Vigenere
 def dechiffre_vigenere(txt, key):
-    """
-    Documentation à écrire
-    """
-    return txt
+	messageDechiffre = ""
+	for i in range(len(txt)):
+		messageDechiffre+=alphabet[(alphabet.index(txt[i])-key[i % len(key)])%26]
+	return messageDechiffre
+  
 
 # Analyse de fréquences
 def freq(txt):
-    """
-    Documentation à écrire
-    """
-    hist=[0.0]*len(alphabet)
-    return hist
+	hist = []
+	for i in alphabet:	
+		hist.append(txt.count(i))
+	return hist
 
 # Renvoie l'indice dans l'alphabet
 # de la lettre la plus fréquente d'un texte
 def lettre_freq_max(txt):
-    """
-    Documentation à écrire
-    """
-    return 0
+    return freq(txt).index(max(freq(txt)))
 
 # indice de coïncidence
 def indice_coincidence(hist):
-    """
-    Documentation à écrire
-    """
-    return 0.0
-
+	s=0
+	for i in hist:
+		s+=(i/sum(hist))*((i-1)/(sum(hist)-1))
+	return s
 # Recherche la longueur de la clé
 def longueur_clef(cipher):
     """
