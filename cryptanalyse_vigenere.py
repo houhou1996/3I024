@@ -5,6 +5,7 @@
 # Etudiant.e 2 : NOM ET NUMERO D'ETUDIANT
 
 import sys, getopt, string, math
+from math import *
 
 
 # Alphabet français
@@ -57,17 +58,32 @@ def lettre_freq_max(txt):
 
 # indice de coïncidence
 def indice_coincidence(hist):
-	s=0
-	for i in hist:
-		s+=(i/sum(hist))*((i-1)/(sum(hist)-1))
-	return s
-# Recherche la longueur de la clé
+    s=0
+    if(sum(hist)>1) :
+        for i in hist:
+            s+=(i*(i-1))/((sum(hist)*(sum(hist)-1)))
+    return s
+# Recherche la longueur de la cl
+
 def longueur_clef(cipher):
-    """
-    Documentation à écrire
-    """
-    return 0
-    
+    longueur_cle = 3
+    while(longueur_cle <= 20):
+        liste =[]
+        s = ""
+        for i in cipher[::longueur_cle]:
+            s+=i
+        liste.append(indice_coincidence(freq(s)))
+        j=1
+        while(j<longueur_cle):
+            s1=""
+            for k in cipher[j::longueur_cle]:
+                s1+=k 
+            liste.append(indice_coincidence(freq(s1)))
+            j+=1
+        if(sum(liste)/len(liste)>0.06):
+            return longueur_cle    
+        longueur_cle+=1
+    return 0;
 # Renvoie le tableau des décalages probables étant
 # donné la longueur de la clé
 # en utilisant la lettre la plus fréquente
