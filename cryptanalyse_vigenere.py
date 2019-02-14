@@ -87,18 +87,20 @@ def longueur_clef(cipher):
 # en utilisant la lettre la plus fréquente
 # de chaque colonne
 def clef_par_decalages(cipher, key_length):
-    """
-    Documentation à écrire
-    """
-    decalages=[0]*key_length
+    decalages=[]
+    j=0
+    while(j<key_length):
+        s=""
+        for i in cipher[j::key_length]:
+            s+=i
+        decalages.append((alphabet.index(alphabet[lettre_freq_max(s)])-alphabet.index('E'))%26)
+        j+=1
     return decalages
+
 
 # Cryptanalyse V1 avec décalages par frequence max
 def cryptanalyse_v1(cipher):
-    """
-    Documentation à écrire
-    """
-    return "TODO"
+    return dechiffre_vigenere(cipher,clef_par_decalages(cipher,longueur_clef(cipher)))
 
 
 ################################################################
@@ -108,11 +110,19 @@ def cryptanalyse_v1(cipher):
 ### pour la cryptanalyse V2.
 
 # Indice de coincidence mutuelle avec décalage
+def shift(liste,d):
+    a = d % len(liste)
+    return liste[-a:] + liste[:-a]
+
+
 def indice_coincidence_mutuelle(h1,h2,d):
-    """
-    Documentation à écrire
-    """
-    return 0.0
+    text1=shift(h1,d)
+    text2=shift(h2,d)
+    s=0
+    for i in range(len(alphabet)):
+        s+=(text1[i]*text2[i])/(sum(text1)*sum(text2))
+    return s
+print(indice_coincidence_mutuelle(freq("ABABAB"),freq("CDCDCD"),2))
 
 # Renvoie le tableau des décalages probables étant
 # donné la longueur de la clé
