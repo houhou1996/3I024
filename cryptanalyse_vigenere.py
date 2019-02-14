@@ -1,8 +1,8 @@
 # Sorbonne Université 3I024 2018-2019
 # TME 2 : Cryptanalyse du chiffre de Vigenere
 #
-# Etudiant.e 1 : NOM ET NUMERO D'ETUDIANT
-# Etudiant.e 2 : NOM ET NUMERO D'ETUDIANT
+# Etudiant.e 1 : Tamene Hocine 3701946
+# Etudiant.e 2 : Kacel Liza
 
 import sys, getopt, string, math
 from math import *
