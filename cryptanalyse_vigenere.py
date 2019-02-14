@@ -64,26 +64,24 @@ def indice_coincidence(hist):
             s+=(i*(i-1))/((sum(hist)*(sum(hist)-1)))
     return s
 # Recherche la longueur de la cl
-
+""" une fonction qui estime la longueur de la clé a partir des indices de coincidencs """
 def longueur_clef(cipher):
     longueur_cle = 3
+    #rechercher la longueur tant que la longueur de la clé ne dépasse pas 20 lettres
     while(longueur_cle <= 20):
-        liste =[]
-        s = ""
-        for i in cipher[::longueur_cle]:
-            s+=i
-        liste.append(indice_coincidence(freq(s)))
-        j=1
-        while(j<longueur_cle):
+        i=0
+        liste=[]
+        while(i<longueur_cle):
             s1=""
-            for k in cipher[j::longueur_cle]:
+            for k in cipher[i::longueur_cle]:
                 s1+=k 
             liste.append(indice_coincidence(freq(s1)))
-            j+=1
+            i+=1
         if(sum(liste)/len(liste)>0.06):
             return longueur_cle    
         longueur_cle+=1
     return 0;
+
 # Renvoie le tableau des décalages probables étant
 # donné la longueur de la clé
 # en utilisant la lettre la plus fréquente
