@@ -80,7 +80,7 @@ def longueur_clef(cipher):
         if(sum(liste)/len(liste)>0.06):
             return longueur_cle    
         longueur_cle+=1
-    return 0;
+    return 0
 
 # Renvoie le tableau des décalages probables étant
 # donné la longueur de la clé
@@ -117,23 +117,30 @@ def shift(liste,d):
 
 def indice_coincidence_mutuelle(h1,h2,d):
     text1=shift(h1,d)
-    text2=shift(h2,d)
+    text2=h2
     s=0
     for i in range(len(alphabet)):
         s+=(text1[i]*text2[i])/(sum(text1)*sum(text2))
     return s
-print(indice_coincidence_mutuelle(freq("ABABAB"),freq("CDCDCD"),2))
 
 # Renvoie le tableau des décalages probables étant
 # donné la longueur de la clé
 # en comparant l'indice de décalage mutuel par rapport
 # à la première colonne
 def tableau_decalages_ICM(cipher, key_length):
-    """
-    Documentation à écrire
-    """
-    decalages=[0]*key_length
-    return decalages
+	decalages = [0]
+	d = 1
+	d0 = cipher[0::key_length]
+	j= 1
+	while(j<key_length):
+		ICM =[]
+		for d in range(len(alphabet)):
+			ICM.append(indice_coincidence_mutuelle(freq(d0),freq(cipher[j::key_length]),d))
+		decalages.append(ICM.index(max(ICM)))
+		j+=1
+		d+=1
+	return decalages
+print(tableau_decalages_ICM("GHGHGH",2))
 
 # Cryptanalyse V2 avec décalages par ICM
 def cryptanalyse_v2(cipher):
