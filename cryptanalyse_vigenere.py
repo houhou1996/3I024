@@ -17,18 +17,19 @@ freq_FR = [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 
 # Chiffrement César
 def chiffre_cesar(txt, key):
-	message_chiffre=""
-	for i in txt:
-		message_chiffre += alphabet[(alphabet.index(i) + key) %26]
-	return message_chiffre
+    message_chiffre=""
+    for i in txt:
+        message_chiffre += alphabet[(alphabet.index(i) + key) %26]
+    txt=message_chiffre
+    return txt
 
 # Déchiffrement César
 def dechiffre_cesar(txt, key):
-	message_dechiffre=""
-	for i in txt:
-		message_dechiffre += alphabet[(alphabet.index(i) - key) %26]
-	return message_dechiffre
-
+    message_dechiffre=""
+    for i in txt:
+        message_dechiffre += alphabet[(alphabet.index(i) - key) %26]
+    txt=message_dechiffre
+    return txt
 # Chiffrement Vigenere
 def chiffre_vigenere(txt, key):
 	messageChiffre = ""
@@ -140,16 +141,24 @@ def tableau_decalages_ICM(cipher, key_length):
 		j+=1
 		d+=1
 	return decalages
-print(tableau_decalages_ICM("GHGHGH",2))
-
 # Cryptanalyse V2 avec décalages par ICM
 def cryptanalyse_v2(cipher):
     """
     Documentation à écrire
     """
-    return "TODO"
-
-
+    key_length = longueur_clef(cipher)
+    decalages = tableau_decalages_ICM(cipher,key_length)
+    s=cipher[0::key_length]
+    i=1;
+    cpt=(alphabet.index(alphabet[lettre_freq_max(s)])-alphabet.index('E'))%26
+    while(i<key_length):
+        s+=dechiffre_cesar(cipher[i::key_length],cpt)
+        i+=1
+    return s
+t = open("data/text1.cipher","r")
+text = t.read()
+print(chiffre_vigenere("JEVAISCHEZMOI",[12,14,8]))
+#print(cryptanalyse_v2(text))
 ################################################################
 
 
