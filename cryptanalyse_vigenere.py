@@ -13,7 +13,7 @@ alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 # Fréquence moyenne des lettres en français
 # À modifier
-freq_FR = [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+freq_FR = [0.09213414037491088,  0.010354463742221126,  0.030178915678726964,  0.03753683726285317,  0.17174710607479665,  0.010939030914707838,  0.01061497737343803,  0.010717912027723734,  0.07507240372750529,  0.003832727374391129,  6.989390105819367e-05,  0.061368115927295096,  0.026498684088462805,  0.07030818127173859,  0.049140495636714375,  0.023697844853330825,  0.010160031617459242,  0.06609294363882899,  0.07816806814528274,  0.07374314880919855,  0.06356151362232132,  0.01645048271269667,  1.14371838095226e-05,  0.004071637436190045,  0.0023001447439151006,  0.0012263202640210343]
 
 # Chiffrement César
 def chiffre_cesar(txt, key):
@@ -143,21 +143,29 @@ def tableau_decalages_ICM(cipher, key_length):
 	return decalages
 # Cryptanalyse V2 avec décalages par ICM
 def cryptanalyse_v2(cipher):
-    """
-    Documentation à écrire
-    """
     key_length = longueur_clef(cipher)
-    decalages = tableau_decalages_ICM(cipher,key_length)
-    s=cipher[0::key_length]
-    i=1;
-    cpt=(alphabet.index(alphabet[lettre_freq_max(s)])-alphabet.index('E'))%26
-    while(i<key_length):
-        s+=dechiffre_cesar(cipher[i::key_length],cpt)
-        i+=1
-    return s
-t = open("data/text1.cipher","r")
+    if(key_length != 0):
+        # On récupére le tableau de décalages 
+        decalages = tableau_decalages_ICM(cipher, key_length)
+        j=0
+        text_chifrre_en_cesar = ""
+        # On parcourt le texte et on décale chaque lettre grâce au tableau décalages
+        for i in cipher:
+            text_chifrre_en_cesar+=dechiffre_cesar(i, decalages[j%len(decalages)])
+            j+=1
+        text_dechifrre_en_cesar = ""
+        # On récupére la fréquence maximum du texte
+        freq_max=lettre_freq_max(text_chifrre_en_cesar)
+        # On récupére le décalage
+        decalage=(freq_FR.index(max(freq_FR))-freq_max)%len(alphabet)
+        for i in text_chifrre_en_cesar:
+            text_dechifrre_en_cesar+=chiffre_cesar(i, decalage)
+        return text_dechifrre_en_cesar
+    else:
+        return cipher
+t = open("data/text2.cipher","r")
 text = t.read()
-print(chiffre_vigenere("JEVAISCHEZMOI",[12,14,8]))
+print(cryptanalyse_v2("VGDJLSJEBEHJD"))
 #print(cryptanalyse_v2(text))
 ################################################################
 
@@ -167,11 +175,37 @@ print(chiffre_vigenere("JEVAISCHEZMOI",[12,14,8]))
 
 # Prend deux listes de même taille et
 # calcule la correlation lineaire de Pearson
+def moyenne(liste):
+	return float(sum(liste))/len(liste)
+def esperance(x):
+	s=0
+	for i in range(len(x)):
+		s+=x[i];
+	return s/len(x)
+
+def variance(a,b):
+	return (esperance(a,[j**2 for j in b]) - esperance(a,b)**2)
+def ecarType(a,b):
+	return math.sqrt(variance(a,b))
+
+
+
+def covariance(x, y):
+	for i in range(len(x)):
+		s+=(x[i]-moyenne(x))*(y[i]-moyenne(y))
+	return s/len(x)
+
+
 def correlation(L1,L2):
-    """
-    Documentation à écrire
-    """
-    return 0.0
+	s1=0
+	s2=0
+	s3=0
+	for i in range(len(L1)):
+		s1+= (L1[i]-moyenne(L1)) * (L2[i]-moyenne(L2))
+		s2+= (L1[i]-moyenne(L1)) * (L1[i]-moyenne(L1))
+		s3+= (L2[i]-moyenne(L2)) * (L2[i]-moyenne(L2))
+	return s1/(math.sqrt(s2*s3))
+print(abs(correlation([1,2,3,4,5],[5,4,1,7,9]) - 0.5734))
 
 # Renvoie la meilleur clé possible par correlation
 # étant donné une longueur de clé fixée
