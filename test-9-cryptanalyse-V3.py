@@ -14,6 +14,7 @@ for i in range(1,101):
         print("Cryptanalysis of data/text"+str(i)+" = SUCCESS")
     else:
         print("Cryptanalysis of data/text"+str(i)+" = FAILED")
+print(count)
 print("\n"+str(count)+" texts successfully unciphered.")
 assert count > 70
 print("Test cryptanalyse_v3 : OK")

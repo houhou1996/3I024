@@ -163,12 +163,6 @@ def cryptanalyse_v2(cipher):
         return text_dechifrre_en_cesar
     else:
         return cipher
-t = open("data/text2.cipher","r")
-text = t.read()
-print(cryptanalyse_v2("VGDJLSJEBEHJD"))
-#print(cryptanalyse_v2(text))
-################################################################
-
 
 ### Les fonctions suivantes sont utiles uniquement
 ### pour la cryptanalyse V3.
@@ -176,53 +170,48 @@ print(cryptanalyse_v2("VGDJLSJEBEHJD"))
 # Prend deux listes de même taille et
 # calcule la correlation lineaire de Pearson
 def moyenne(liste):
-	return float(sum(liste))/len(liste)
+	return sum(liste)/len(liste)
 def esperance(x):
 	s=0
 	for i in range(len(x)):
 		s+=x[i];
 	return s/len(x)
-
-def variance(a,b):
-	return (esperance(a,[j**2 for j in b]) - esperance(a,b)**2)
-def ecarType(a,b):
-	return math.sqrt(variance(a,b))
-
-
-
-def covariance(x, y):
-	for i in range(len(x)):
-		s+=(x[i]-moyenne(x))*(y[i]-moyenne(y))
-	return s/len(x)
-
-
 def correlation(L1,L2):
 	s1=0
 	s2=0
 	s3=0
 	for i in range(len(L1)):
-		s1+= (L1[i]-moyenne(L1)) * (L2[i]-moyenne(L2))
-		s2+= (L1[i]-moyenne(L1)) * (L1[i]-moyenne(L1))
-		s3+= (L2[i]-moyenne(L2)) * (L2[i]-moyenne(L2))
+		s1+= (L1[i]-esperance(L1)) * (L2[i]-esperance(L2))
+		s2+= (L1[i]-esperance(L1)) ** 2
+		s3+= (L2[i]-esperance(L2)) ** 2
 	return s1/(math.sqrt(s2*s3))
-print(abs(correlation([1,2,3,4,5],[5,4,1,7,9]) - 0.5734))
-
 # Renvoie la meilleur clé possible par correlation
 # étant donné une longueur de clé fixée
 def clef_correlations(cipher, key_length):
-    """
-    Documentation à écrire
-    """
-    key=[0]*key_length
-    score = 0.0
-    return (score, key)
-
+    decalages = []
+    maximal = []
+    i=0
+    while(i<key_length):
+    	liste = []
+    	for j in range(26):
+    		liste.append(correlation(freq_FR,freq(dechiffre_cesar(cipher[i::key_length],j))))
+    	maximal.append(max(liste))
+    	decalages.append((liste.index(maximal[i])))
+    	i+=1
+    return (moyenne(maximal),decalages)
 # Cryptanalyse V3 avec correlations
 def cryptanalyse_v3(cipher):
-    """
-    Documentation à écrire
-    """
-    return "TODO"
+    i=1
+    liste1=[]
+    liste2=[]
+    while i<=20:
+        (score,key) = clef_correlations(cipher,i)
+        liste1.append(score)
+        liste2.append(key)
+        i+=1
+    maxi = max(liste1)
+    key = liste2[liste1.index(maxi)]
+    return dechiffre_vigenere(cipher,key)
 
 
 ################################################################

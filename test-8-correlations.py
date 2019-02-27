@@ -19,6 +19,7 @@ print("---------------------")
 
 print("Test clef_correlations")
 (score0, key0) = clef_correlations("ALKINDI",2)
+print(key0)
 assert abs(score0-0.34)<0.01
 assert key0 == [22, 25]
 (score1, key1) = clef_correlations(text1,7)
